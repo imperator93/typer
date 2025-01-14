@@ -10,24 +10,36 @@ export const WordScreen = ({
 }) => {
   return (
     <div style={WordContainer}>
-      {words.map((item) => {
+      {words.map((word, wordIndex) => {
         return (
-          <p key={item} style={{ display: "flex", margin: "0px" }}>
-            {item.split("").map((letter) => (
-              <p
-                style={{
-                  margin: "0px",
-                  color:
-                    gameState.gameHasStarted &&
-                    gameState.counter == item.indexOf(letter)
-                      ? "blue"
-                      : "black",
-                }}
-              >
-                {letter}
-              </p>
-            ))}
-          </p>
+          <div
+            className="word"
+            key={Math.random()}
+            style={{
+              display: "flex",
+              margin: "0px",
+              color: words[gameState.counter] == word ? "white" : "black",
+            }}
+          >
+            {word.split("").map((letter) => {
+              return (
+                <p
+                  className="letter"
+                  key={Math.random()}
+                  style={{
+                    margin: "0px",
+                    color:
+                      letter == gameState.keyInput &&
+                      wordIndex == gameState.currentLetterIndex
+                        ? "blue"
+                        : "red",
+                  }}
+                >
+                  {letter}
+                </p>
+              );
+            })}
+          </div>
         );
       })}
     </div>

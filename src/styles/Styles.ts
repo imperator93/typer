@@ -11,5 +11,4 @@ export const WordContainer: React.CSSProperties = {
   borderRadius: "20px",
   padding: "0px 20px 0px 20px",
   userSelect: "none",
-  color: "red",
 };
