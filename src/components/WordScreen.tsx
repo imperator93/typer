@@ -21,7 +21,7 @@ export const WordScreen = ({
               color: words[gameState.counter] == word ? "white" : "black",
             }}
           >
-            {word.split("").map((letter) => {
+            {word.split("").map((letter, letterIndex) => {
               return (
                 <p
                   className="letter"
@@ -29,8 +29,9 @@ export const WordScreen = ({
                   style={{
                     margin: "0px",
                     color:
-                      letter == gameState.keyInput &&
-                      wordIndex == gameState.currentLetterIndex
+                      words.indexOf(gameState.currentWord) == wordIndex &&
+                      gameState.currentWord.slice(0, letterIndex) ==
+                        gameState.inputWord
                         ? "blue"
                         : "red",
                   }}

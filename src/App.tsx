@@ -21,8 +21,6 @@ export const App = () => {
     setWords(WordArray1);
   }, [words]);
 
-  console.log(gameState.gameHasStarted);
-
   const handleInputOnChangeEvent = (event: React.BaseSyntheticEvent) => {
     const playerInput: string = event.target.value;
     const inputLength = playerInput.length;
@@ -39,6 +37,15 @@ export const App = () => {
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     const keyCode = event.keyCode;
+    //need to move this logic to onChage handler because this hadler fires of before the space key is registered in onChange
+    if (keyCode == 32) {
+      setGameState((prev) => ({
+        ...prev,
+        currentWord: words[gameState.counter++],
+        inputWord: "",
+      }));
+    }
+
     if (keyCode == 8 && gameState.currentLetterIndex > 0)
       setGameState((prev) => ({
         ...prev,
@@ -62,6 +69,7 @@ export const App = () => {
         >
           <WordScreen gameState={gameState} words={words}></WordScreen>
           <input
+            value={gameState.inputWord}
             onKeyDown={(event) => handleKeyDown(event)}
             onChange={(event) => handleInputOnChangeEvent(event)}
             style={{ width: "500px", margin: "auto", marginTop: "10px" }}
