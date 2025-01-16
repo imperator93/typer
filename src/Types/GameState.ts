@@ -1,8 +1,7 @@
 export type GameState = {
-  currentLetterIndex: number;
   gameHasStarted: boolean;
-  counter: number;
-  keyInput: string;
+  wordCounter: number;
   inputWord: string;
   currentWord: string;
+  wrongLetterCounter: number;
 };

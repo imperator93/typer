@@ -6,16 +6,11 @@ import { TitleComponent } from "./components/TitleComponents";
 import { WordArray1 } from "./assets/inputArrays/WordArrays";
 import { GameState } from "./Types/GameState";
 
+import { INIT_GAMESTATE } from "./CONSTANTS/INIT_GAMESTATE";
+
 export const App = () => {
   const [words, setWords] = useState<string[]>([]);
-  const [gameState, setGameState] = useState<GameState>({
-    gameHasStarted: false,
-    inputWord: "",
-    counter: 0,
-    keyInput: "",
-    currentLetterIndex: 0,
-    currentWord: "",
-  });
+  const [gameState, setGameState] = useState<GameState>(INIT_GAMESTATE);
 
   useEffect(() => {
     setWords(WordArray1);
@@ -23,35 +18,63 @@ export const App = () => {
 
   const handleInputOnChangeEvent = (event: React.BaseSyntheticEvent) => {
     const playerInput: string = event.target.value;
-    const inputLength = playerInput.length;
 
     setGameState((prev) => ({
       ...prev,
-      currentLetterIndex: inputLength,
       inputWord: playerInput,
-      keyInput: playerInput[gameState.currentLetterIndex],
       gameHasStarted: true,
-      currentWord: words[gameState.counter],
+      currentWord: words[gameState.wordCounter],
     }));
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const handleKeyUp = (event: React.KeyboardEvent) => {
     const keyCode = event.keyCode;
-    //need to move this logic to onChage handler because this hadler fires of before the space key is registered in onChange
     if (keyCode == 32) {
+      calcNumOfWrongAns();
       setGameState((prev) => ({
         ...prev,
-        currentWord: words[gameState.counter++],
+        currentWord: words[++prev.wordCounter],
         inputWord: "",
+        wordCounter: prev.wordCounter,
       }));
     }
-
-    if (keyCode == 8 && gameState.currentLetterIndex > 0)
+    if (gameState.wordCounter > words.length - 1) {
       setGameState((prev) => ({
         ...prev,
-        currentLetterIndex: gameState.currentLetterIndex--,
+        gameHasStarted: false,
+        wordCounter: 0,
+        currentWord: words[prev.wordCounter],
+        wrongLetterCounter: 0,
       }));
+    }
   };
+
+  const calculateResult = () => {
+    let maxResult = 0;
+    words.forEach((word) => (maxResult += word.length));
+    return maxResult;
+  };
+  //bad implementation... should compare word[index.of(l)] in gameState
+  const MAX_RESULT = calculateResult();
+  const RESULT = `
+  ${(
+    ((MAX_RESULT - gameState.wrongLetterCounter) / MAX_RESULT) *
+    100
+  ).toLocaleString()}
+  % Correct`;
+
+  const calcNumOfWrongAns = () => {
+    let counter = 0;
+    for (let i = 0; i < words[gameState.wordCounter].length; i++) {
+      if (words[gameState.wordCounter][i] != gameState.inputWord[i]) counter++;
+    }
+
+    setGameState((prev) => ({
+      ...prev,
+      wrongLetterCounter: prev.wrongLetterCounter + counter,
+    }));
+  };
+
   return (
     <>
       <header>
@@ -68,14 +91,27 @@ export const App = () => {
           className="main"
         >
           <WordScreen gameState={gameState} words={words}></WordScreen>
-          <input
-            value={gameState.inputWord}
-            onKeyDown={(event) => handleKeyDown(event)}
-            onChange={(event) => handleInputOnChangeEvent(event)}
-            style={{ width: "500px", margin: "auto", marginTop: "10px" }}
-            type="text"
-          />
+          <div>
+            <input
+              onKeyUp={(event) => handleKeyUp(event)}
+              onChange={(event) => handleInputOnChangeEvent(event)}
+              value={gameState.inputWord}
+              style={{ width: "400px", margin: "auto", marginTop: "10px" }}
+              type="text"
+            />
+            <button
+              style={{ marginLeft: "10px" }}
+              onClick={() => setGameState(INIT_GAMESTATE)}
+            >
+              RESET
+            </button>
+          </div>
         </div>
+        <p
+          style={{ justifySelf: "center", marginTop: "20px", fontSize: "20px" }}
+        >
+          {RESULT}
+        </p>
       </main>
     </>
   );
