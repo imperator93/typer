@@ -29,10 +29,14 @@ export const WordScreen = ({
                     margin: "0px",
                     color:
                       letter == gameState.inputWord[letterIndex] &&
-                      gameState.currentWord == words[gameState.wordCounter] &&
                       wordIndex == gameState.wordCounter
                         ? "blue"
                         : "red",
+                    textDecoration:
+                      wordIndex == gameState.wordCounter &&
+                      gameState.currentLetterIndex == letterIndex
+                        ? "underline"
+                        : "normal",
                   }}
                 >
                   {letter}

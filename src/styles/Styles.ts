@@ -9,6 +9,6 @@ export const WordContainer: React.CSSProperties = {
   justifySelf: "center",
   backgroundColor: "lightblue",
   borderRadius: "20px",
-  padding: "0px 20px 0px 20px",
+  padding: "10px 20px 10px 20px",
   userSelect: "none",
 };

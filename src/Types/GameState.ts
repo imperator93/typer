@@ -4,4 +4,5 @@ export type GameState = {
   inputWord: string;
   currentWord: string;
   wrongLetterCounter: number;
+  currentLetterIndex: number;
 };

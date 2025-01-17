@@ -24,9 +24,10 @@ export const App = () => {
       inputWord: playerInput,
       gameHasStarted: true,
       currentWord: words[gameState.wordCounter],
+      currentLetterIndex: playerInput.length,
     }));
   };
-
+  console.log(gameState.currentLetterIndex);
   const handleKeyUp = (event: React.KeyboardEvent) => {
     const keyCode = event.keyCode;
     if (keyCode == 32) {
@@ -36,6 +37,7 @@ export const App = () => {
         currentWord: words[++prev.wordCounter],
         inputWord: "",
         wordCounter: prev.wordCounter,
+        currentLetterIndex: 0,
       }));
     }
     if (gameState.wordCounter > words.length - 1) {
@@ -65,10 +67,12 @@ export const App = () => {
 
   const calcNumOfWrongAns = () => {
     let counter = 0;
-    for (let i = 0; i < words[gameState.wordCounter].length; i++) {
-      if (words[gameState.wordCounter][i] != gameState.inputWord[i]) counter++;
+    if (words[gameState.wordCounter] != undefined) {
+      for (let i = 0; i < words[gameState.wordCounter].length; i++) {
+        if (words[gameState.wordCounter][i] != gameState.inputWord[i])
+          counter++;
+      }
     }
-
     setGameState((prev) => ({
       ...prev,
       wrongLetterCounter: prev.wrongLetterCounter + counter,
